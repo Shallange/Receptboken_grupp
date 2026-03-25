@@ -16,17 +16,45 @@ struct Recept: Identifiable {
 
 struct DetailedReceptView: View {
     let recept: Recept
-    
+
     var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: recept.bild)
-            Text(recept.namn)
-            Text(recept.tillagningstid)
-            Text(recept.svårighetsgrad)
-            ForEach(recept.ingredienser, id: \.self) { ingrediens in
-                Text(ingrediens)
+        VStack(spacing:20) {
+            ZStack {
+                Circle()
+                    .foregroundStyle(.yellow.opacity(0.4))
+                    .frame(width: 60, height: 60)
+                Image(systemName: recept.bild)
+                    .font(Font.largeTitle)
+                    .foregroundStyle(Color.orange)
+                    .padding(5)
+                    .foregroundColor(Color.blue)
+                    .padding(8)
+                    .background(
+                        Circle()
+                            .stroke(.yellow, lineWidth: 4)
+                    )
             }
-            Text(recept.instruktioner)
+            Spacer()
+            Text("Tillagningstid: \(recept.tillagningstid)")
+            Text(recept.svårighetsgrad)
+            ZStack(alignment: .topLeading){
+                Rectangle()
+                    .fill(.yellow.opacity(0.2))
+                VStack(alignment: .leading){
+                    ForEach(recept.ingredienser, id: \.self) { ingrediens in
+                        Text("- \(ingrediens)")
+                    }
+                    Spacer()
+                    Text(recept.instruktioner)
+                    Spacer()
+                }
+                .bold()
+                .padding()
+
+
+            }
+            .padding()
+            Spacer()
         }
         .navigationTitle(recept.namn)
     }
@@ -45,11 +73,12 @@ struct ContentView: View {
                 "Ägg",
                 "Parmesan",
                 "Bacon",
-                "Svartpeppar"
+                "Svartpeppar",
             ],
-            instruktioner: "Koka pastan. Stek bacon. Blanda ägg och parmesan. Blanda allt och toppa med peppar."
+            instruktioner:
+                "Koka pastan. Stek bacon. Blanda ägg och parmesan. Blanda allt och toppa med peppar."
         ),
-        
+
         Recept(
             namn: "Pannkakor",
             bild: "frying.pan.fill",
@@ -60,11 +89,12 @@ struct ContentView: View {
                 "Mjölk",
                 "Ägg",
                 "Salt",
-                "Smör"
+                "Smör",
             ],
-            instruktioner: "Vispa ihop smeten. Stek tunna pannkakor i smör. Servera med sylt."
+            instruktioner:
+                "Vispa ihop smeten. Stek tunna pannkakor i smör. Servera med sylt."
         ),
-        
+
         Recept(
             namn: "Kycklinggryta",
             bild: "frying.pan.fill",
@@ -75,11 +105,12 @@ struct ContentView: View {
                 "Grädde",
                 "Paprika",
                 "Lök",
-                "Kryddor"
+                "Kryddor",
             ],
-            instruktioner: "Stek kycklingen. Tillsätt grönsaker och grädde. Låt sjuda i 20 minuter."
+            instruktioner:
+                "Stek kycklingen. Tillsätt grönsaker och grädde. Låt sjuda i 20 minuter."
         ),
-        
+
         Recept(
             namn: "Tacos",
             bild: "frying.pan.fill",
@@ -91,11 +122,12 @@ struct ContentView: View {
                 "Tacokrydda",
                 "Sallad",
                 "Tomat",
-                "Ost"
+                "Ost",
             ],
-            instruktioner: "Stek köttfärsen med krydda. Fyll bröd med kött och grönsaker."
+            instruktioner:
+                "Stek köttfärsen med krydda. Fyll bröd med kött och grönsaker."
         ),
-        
+
         Recept(
             namn: "Caesarsallad",
             bild: "frying.pan.fill",
@@ -106,19 +138,24 @@ struct ContentView: View {
                 "Kyckling",
                 "Parmesan",
                 "Krutonger",
-                "Caesardressing"
+                "Caesardressing",
             ],
-            instruktioner: "Stek kycklingen. Blanda med sallad, dressing och toppa med parmesan och krutonger."
-        )
+            instruktioner:
+                "Stek kycklingen. Blanda med sallad, dressing och toppa med parmesan och krutonger."
+        ),
     ]
-    
+
     var body: some View {
         NavigationStack {
-                List(recepts) { recept in
-                    NavigationLink {
-                        DetailedReceptView(recept: recept)
-                    } label: {
-                        HStack {
+            List(recepts) { recept in
+                NavigationLink {
+                    DetailedReceptView(recept: recept)
+                } label: {
+                    HStack {
+                        ZStack {
+                            Circle()
+                                .foregroundStyle(.yellow.opacity(0.4))
+                                .frame(width: 60, height: 60)
                             Image(systemName: recept.bild)
                                 .font(Font.largeTitle)
                                 .foregroundStyle(Color.orange)
@@ -127,19 +164,21 @@ struct ContentView: View {
                                 .padding(8)
                                 .background(
                                     Circle()
-                                        .stroke(.yellow, lineWidth: 2))
-                            
-                            Text(recept.namn)
-                                .font(.headline)
-                            Text(recept.svårighetsgrad)
-                                .font(.subheadline)
-                                .italic(true)
-                            Text(recept.tillagningstid)
+                                        .stroke(.yellow, lineWidth: 4)
+                                )
                         }
+
+                        Text(recept.namn)
+                            .font(.headline)
+                        Text(recept.svårighetsgrad)
+                            .font(.subheadline)
+                            .italic(true)
+                        Text(recept.tillagningstid)
                     }
                 }
-                .navigationBarTitle("Receptboken")
             }
+            .navigationBarTitle("Receptboken")
+        }
 
     }
 }
