@@ -7,6 +7,7 @@ import SwiftUI
 struct Recept: Identifiable {
     let id: UUID = UUID()
     let namn: String
+    let bild: String
     let tillagningstid: String
     let svårighetsgrad: String
     let ingredienser: [String]
@@ -18,7 +19,7 @@ struct DetailedReceptView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-//          Image(systemName: <#T##String#>)
+            Image(systemName: recept.bild)
             Text(recept.namn)
             Text(recept.tillagningstid)
             Text(recept.svårighetsgrad)
@@ -36,6 +37,7 @@ struct ContentView: View {
     @State private var recepts: [Recept] = [
         Recept(
             namn: "Spaghetti Carbonara",
+            bild: "frying.pan.fill",
             tillagningstid: "20 min",
             svårighetsgrad: "Medel",
             ingredienser: [
@@ -50,6 +52,7 @@ struct ContentView: View {
         
         Recept(
             namn: "Pannkakor",
+            bild: "frying.pan.fill",
             tillagningstid: "25 min",
             svårighetsgrad: "Lätt",
             ingredienser: [
@@ -64,6 +67,7 @@ struct ContentView: View {
         
         Recept(
             namn: "Kycklinggryta",
+            bild: "frying.pan.fill",
             tillagningstid: "40 min",
             svårighetsgrad: "Medel",
             ingredienser: [
@@ -78,6 +82,7 @@ struct ContentView: View {
         
         Recept(
             namn: "Tacos",
+            bild: "frying.pan.fill",
             tillagningstid: "30 min",
             svårighetsgrad: "Lätt",
             ingredienser: [
@@ -93,6 +98,7 @@ struct ContentView: View {
         
         Recept(
             namn: "Caesarsallad",
+            bild: "frying.pan.fill",
             tillagningstid: "20 min",
             svårighetsgrad: "Lätt",
             ingredienser: [
@@ -108,21 +114,33 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            List(recepts) { recept in
-                NavigationLink {
-                    DetailedReceptView(recept: recept)
-                } label: {
-                    VStack {
-                        Text(recept.namn)
-                            .font(.headline)
-                        Text(recept.tillagningstid)
-                            .font(.subheadline)
-                        Text(recept.svårighetsgrad)
+                List(recepts) { recept in
+                    NavigationLink {
+                        DetailedReceptView(recept: recept)
+                    } label: {
+                        HStack {
+                            Image(systemName: recept.bild)
+                                .font(Font.largeTitle)
+                                .foregroundStyle(Color.orange)
+                                .padding(5)
+                                .foregroundColor(Color.blue)
+                                .padding(8)
+                                .background(
+                                    Circle()
+                                        .stroke(.yellow, lineWidth: 2))
+                            
+                            Text(recept.namn)
+                                .font(.headline)
+                            Text(recept.svårighetsgrad)
+                                .font(.subheadline)
+                                .italic(true)
+                            Text(recept.tillagningstid)
+                        }
                     }
                 }
+                .navigationBarTitle("Receptboken")
             }
-            .navigationBarTitle("Receptboken")
-        }
+
     }
 }
 
