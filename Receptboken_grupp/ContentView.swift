@@ -177,42 +177,54 @@ struct ContentView: View {
     @State private var nyReceptInstruktioner: String = ""
 
     var body: some View {
-        NavigationStack {
-            List { ForEach(filtreradeRecept) { recept in
-                NavigationLink {
-                    DetailedReceptView(recept: recept)
-                } label: {
-                    HStack {
-                        Image(systemName: recept.bild)
-                            .frame(width: 36, height: 36)
-                            .font(Font.largeTitle)
-                            .padding(15)
-                            .foregroundStyle(Color.orange)
-                            .background(
-                                Circle()
-                                    .fill(Color.yellow.opacity(0.4))
-                                    .stroke(.yellow, lineWidth: 4)
-                            )
-                        
-                        Text(recept.namn)
-                            .font(.headline)
-                        Text(recept.svårighetsgrad)
-                            .font(.subheadline)
-                            .italic(true)
-                        Text(recept.tillagningstid)
+        TabView {
+            Tab("", systemImage: "house") {
+                NavigationStack {
+                    List { ForEach(filtreradeRecept) { recept in
+                        NavigationLink {
+                            DetailedReceptView(recept: recept)
+                        } label: {
+                            HStack {
+                                Image(systemName: recept.bild)
+                                    .frame(width: 36, height: 36)
+                                    .font(Font.largeTitle)
+                                    .padding(15)
+                                    .foregroundStyle(Color.orange)
+                                    .background(
+                                        Circle()
+                                            .fill(Color.yellow.opacity(0.4))
+                                            .stroke(.yellow, lineWidth: 4)
+                                    )
+                                
+                                Text(recept.namn)
+                                    .font(.headline)
+                                Text(recept.svårighetsgrad)
+                                    .font(.subheadline)
+                                    .italic(true)
+                                Text(recept.tillagningstid)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                    .onDelete(perform: deleteItems)
+                    }
+                    .navigationTitle("Receptboken")
+                    .searchable(
+                        text: $search,
+                        placement: .navigationBarDrawer(displayMode: .always),
+                        prompt: "Hitta recept")
                 }
             }
-                
-            .onDelete(perform: deleteItems)
+            Tab("", systemImage: "plus.circle.fill") {
+                Text ("hej")
             }
-            .navigationTitle("Receptboken")
-            .searchable(
-                text: $search,
-                placement: .navigationBarDrawer(displayMode: .always),
-                prompt: "Hitta recept")
+
+
+            
+            
         }
+
 
         
         Button {
