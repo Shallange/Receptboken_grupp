@@ -207,9 +207,13 @@ struct ContentView: View {
                 
             .onDelete(perform: deleteItems)
             }
-            .navigationBarTitle("Receptboken")
+            .navigationTitle("Receptboken")
+            .searchable(
+                text: $search,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: "Hitta recept")
         }
-        .searchable(text: $search, prompt: "Hitta recept")
+
         
         Button {
             showForm.toggle()
