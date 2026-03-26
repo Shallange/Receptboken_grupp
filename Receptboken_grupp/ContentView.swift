@@ -14,11 +14,14 @@ struct Recept: Identifiable {
     let instruktioner: String
 }
 
+
 struct DetailedReceptView: View {
     let recept: Recept
 
+
     var body: some View {
-        VStack(spacing:20) {
+        
+        VStack(spacing: 20) {
             ZStack {
                 Circle()
                     .foregroundStyle(.yellow.opacity(0.4))
@@ -42,60 +45,38 @@ struct DetailedReceptView: View {
                 Text("Svårighetsgrad: \(recept.svårighetsgrad)")
                     .font(.subheadline)
                     .foregroundStyle(Color.black.opacity(0.8))
-                
+
             }
-            
 
-
-//           GroupBox(label:
-//                   Label("End-User Agreement", systemImage: "building.columns")
-//               ) {
-//                   ScrollView(.vertical, showsIndicators: true) {
-//                       Text(agreementText)
-//                           .font(.footnote)
-//                   }
-//                   .frame(height: 100)
-//                   Toggle(isOn: $userAgreed) {
-//                       Text("I agree to the above terms")
-//                   }
-//               }
-            
-            
-
-            ZStack(alignment: .topLeading){
+            ZStack(alignment: .topLeading) {
                 Rectangle()
-                    .fill(.yellow.opacity(0.2))
+                    .fill(.yellow.opacity(0.5))
                     .cornerRadius(20)
-                VStack(alignment: .leading){
-                    GroupBox(label:
-                                Label("Ingredienser", systemImage: "carrot")
-            
-                                    .font(.headline)
-                                    .foregroundStyle(Color.black.opacity(0.8))
-                             ) {
-                        
+                VStack(alignment: .leading) {
+                    GroupBox(
+                        label:
+                            Label("Ingredienser", systemImage: "carrot")
+                            .font(.headline)
+                            .foregroundStyle(Color.black.opacity(0.8))
+                    ) {
                         ForEach(recept.ingredienser, id: \.self) { ingrediens in
                             Text("- \(ingrediens)")
-                        }
+                        }.frame(maxWidth: .infinity, alignment: .center)
                     }
-
-
-
                     Spacer()
-                    GroupBox(label:
-                                Label("Gör så här:", systemImage: "frying.pan")
-                             
-                        .font(.headline)
-                        .foregroundStyle(Color.black.opacity(0.8))
+                    GroupBox(
+                        label:
+                            Label("Gör så här:", systemImage: "frying.pan")
+                            .font(.headline)
+                            .foregroundStyle(Color.black.opacity(0.8))
                     ) {
                         Text(recept.instruktioner)
                     }
-                    
+
                     Spacer()
                 }
                 .bold()
                 .padding()
-
 
             }
             .padding()
@@ -197,16 +178,16 @@ struct ContentView: View {
                     DetailedReceptView(recept: recept)
                 } label: {
                     HStack {
-                            Image(systemName: recept.bild)
-                                .frame(width: 36, height: 36)
-                                .font(Font.largeTitle)
-                                .padding(15)
-                                .foregroundStyle(Color.orange)
-                                .background(
-                                    Circle()
-                                        .fill(Color.yellow.opacity(0.4))
-                                        .stroke(.yellow, lineWidth: 4)
-                                )
+                        Image(systemName: recept.bild)
+                            .frame(width: 36, height: 36)
+                            .font(Font.largeTitle)
+                            .padding(15)
+                            .foregroundStyle(Color.orange)
+                            .background(
+                                Circle()
+                                    .fill(Color.yellow.opacity(0.4))
+                                    .stroke(.yellow, lineWidth: 4)
+                            )
 
                         Text(recept.namn)
                             .font(.headline)
@@ -219,6 +200,34 @@ struct ContentView: View {
                 }
             }
             .navigationBarTitle("Receptboken")
+        }
+        
+        VStack {
+            TextField("Namn", text: $newname)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            TextField("N", text: $newCatagory)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            TextField("Ny bokförfattare", text: $newAuthor)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            Button () {
+                recepts.append(Recept(namn: $newnamn, bild: <#T##String#>, tillagningstid: <#T##String#>, svårighetsgrad: <#T##String#>, ingredienser: <#T##[String]#>, instruktioner: <#T##String#>)
+            } label: {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Lägg till recept")
+                }
+                .foregroundStyle(Color(.white))
+                .frame(maxWidth: .infinity)
+                .padding(20)
+                .background(Color(.blue))
+                .cornerRadius(20)
+            }
+            .padding(.horizontal)
         }
 
     }
