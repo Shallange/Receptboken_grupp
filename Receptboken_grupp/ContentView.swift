@@ -17,8 +17,6 @@ struct Recept: Identifiable {
 
 struct DetailedReceptView: View {
     let recept: Recept
-
-
     var body: some View {
         
         VStack(spacing: 20) {
@@ -170,6 +168,11 @@ struct ContentView: View {
                 "Stek kycklingen. Blanda med sallad, dressing och toppa med parmesan och krutonger."
         ),
     ]
+    @State private var nyReceptNamn: String = ""
+    @State private var nyReceptTillagningstid: String = ""
+    @State private var nyReceptSvårighetsgrad: String = ""
+    @State private var nyReceptIngredienser: String = ""
+    @State private var nyReceptInstruktioner: String = ""
 
     var body: some View {
         NavigationStack {
@@ -203,19 +206,37 @@ struct ContentView: View {
         }
         
         VStack {
-            TextField("Namn", text: $newname)
+            TextField("Namn", text: $nyReceptNamn)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
-            TextField("N", text: $newCatagory)
+            TextField("Svårighetsgrad", text: $nyReceptSvårighetsgrad)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
-            TextField("Ny bokförfattare", text: $newAuthor)
+            TextField("Tillagningstid", text: $nyReceptTillagningstid)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            TextField("Ingredienser. separera med kommatecken", text: $nyReceptIngredienser)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            TextField("Instruktioner", text: $nyReceptInstruktioner)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             Button () {
-                recepts.append(Recept(namn: $newnamn, bild: <#T##String#>, tillagningstid: <#T##String#>, svårighetsgrad: <#T##String#>, ingredienser: <#T##[String]#>, instruktioner: <#T##String#>)
+                let ingrediensLista = nyReceptIngredienser
+                    .split(separator: ",")
+                    .map {$0.trimmingCharacters(in: .whitespacesAndNewlines)}
+                    .filter {!$0.isEmpty}
+                
+                recepts.append(Recept(
+                    namn: nyReceptNamn,
+                    bild: "frying.pan.fill",
+                    tillagningstid: nyReceptTillagningstid,
+                    svårighetsgrad: nyReceptSvårighetsgrad,
+                    ingredienser: ingrediensLista,
+                    instruktioner: nyReceptInstruktioner))
             } label: {
                 HStack {
                     Image(systemName: "plus.circle.fill")
