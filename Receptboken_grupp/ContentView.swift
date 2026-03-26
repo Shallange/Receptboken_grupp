@@ -87,7 +87,7 @@ struct DetailedReceptView: View {
 
 struct ContentView: View {
     @State private var showForm: Bool = false
-
+    @State private var search: String = ""
     @State private var recepts: [Recept] = [
         Recept(
             namn: "Spaghetti Carbonara",
@@ -178,7 +178,8 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            List(recepts) { recept in
+            List { ForEach(recepts) { recept in
+                
                 NavigationLink {
                     DetailedReceptView(recept: recept)
                 } label: {
@@ -193,7 +194,7 @@ struct ContentView: View {
                                     .fill(Color.yellow.opacity(0.4))
                                     .stroke(.yellow, lineWidth: 4)
                             )
-
+                        
                         Text(recept.namn)
                             .font(.headline)
                         Text(recept.svårighetsgrad)
@@ -204,8 +205,12 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
+                
+            .onDelete(perform: deleteItems)
+            }
             .navigationBarTitle("Receptboken")
         }
+        .searchable(text: $search, prompt: "Hitta recept")
 
         Button {
             showForm.toggle()
@@ -293,7 +298,22 @@ struct ContentView: View {
                 }
                 .padding(.horizontal)
             }
+        
         }
+    }
+    var filtreradeRecept: [String] {
+        if search.isEmpty {
+            return recepts.map { $0.namn }
+        } else {
+            return recepts.filter { $0
+                .localizedCaseInsensitiveContains(search)}
+        }
+        
+        
+    }
+    
+    func deleteItems(indexSet: IndexSet) {
+        recepts.remove(atOffsets: indexSet)
     }
 }
 
