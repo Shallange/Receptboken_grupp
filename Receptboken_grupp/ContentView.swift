@@ -14,12 +14,11 @@ struct Recept: Identifiable {
     let instruktioner: String
 }
 
-
 struct DetailedReceptView: View {
-    
+
     let recept: Recept
     var body: some View {
-        
+
         VStack(spacing: 20) {
             ZStack {
                 Circle()
@@ -86,7 +85,6 @@ struct DetailedReceptView: View {
 }
 
 struct ContentView: View {
-    @State private var showForm: Bool = false
     @State private var search: String = ""
     @State private var recepts: [Recept] = [
         Recept(
@@ -177,144 +175,147 @@ struct ContentView: View {
     @State private var nyReceptInstruktioner: String = ""
 
     var body: some View {
-        NavigationStack {
-            List { ForEach(filtreradeRecept) { recept in
-                NavigationLink {
-                    DetailedReceptView(recept: recept)
-                } label: {
-                    HStack {
-                        Image(systemName: recept.bild)
-                            .frame(width: 36, height: 36)
-                            .font(Font.largeTitle)
-                            .padding(15)
-                            .foregroundStyle(Color.orange)
-                            .background(
-                                Circle()
-                                    .fill(Color.yellow.opacity(0.4))
-                                    .stroke(.yellow, lineWidth: 4)
-                            )
-                        
-                        Text(recept.namn)
-                            .font(.headline)
-                        Text(recept.svårighetsgrad)
-                            .font(.subheadline)
-                            .italic(true)
-                        Text(recept.tillagningstid)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-                
-            .onDelete(perform: deleteItems)
-            }
-            .navigationTitle("Receptboken")
-            .searchable(
-                text: $search,
-                placement: .navigationBarDrawer(displayMode: .always),
-                prompt: "Hitta recept")
-        }
+        TabView {
+            Tab("", systemImage: "house") {
+                NavigationStack {
+                    List {
+                        ForEach(filtreradeRecept) { recept in
+                            NavigationLink {
+                                DetailedReceptView(recept: recept)
+                            } label: {
+                                HStack {
+                                    Image(systemName: recept.bild)
+                                        .frame(width: 36, height: 36)
+                                        .font(Font.largeTitle)
+                                        .padding(15)
+                                        .foregroundStyle(Color.orange)
+                                        .background(
+                                            Circle()
+                                                .fill(Color.yellow.opacity(0.4))
+                                                .stroke(.yellow, lineWidth: 4)
+                                        )
 
-        
-        Button {
-            showForm.toggle()
-        } label: {
-            HStack {
-                if showForm{
-                    Image(systemName: "minus.circle.fill")
-                }else{
-                    Image(systemName: "plus.circle.fill")
-                }
-            }
-            .foregroundStyle(Color(.white))
-            .font(Font.largeTitle)
-            .frame(maxWidth: 200)
-            .padding(5)
-            .background(Color(.yellow))
-            .cornerRadius(20)
-        }
-    
- 
-        if showForm{
-            VStack {
-                TextField("Namn", text: $nyReceptNamn)
-                    .padding(10)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .border(Color.yellow, width: 2)
-                    .padding(7)
-                
-                TextField("Svårighetsgrad", text: $nyReceptSvårighetsgrad)
-                    .padding(10)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .border(Color.yellow, width: 2)
-                    .padding(7)
-                
-                TextField("Tillagningstid", text: $nyReceptTillagningstid)
-                    .padding(10)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .border(Color.yellow, width: 2)
-                    .padding(7)
-                
-                TextField("Ingredienser. separera med kommatecken", text: $nyReceptIngredienser)
-                    .padding(10)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .border(Color.yellow, width: 2)
-                    .padding(7)
-                
-                TextField("Instruktioner", text: $nyReceptInstruktioner)
-                    .padding(10)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .border(Color.yellow, width: 2)
-                    .padding(7)
-                
-                Button () {
-                    let ingrediensLista = nyReceptIngredienser
-                        .split(separator: ",")
-                        .map {$0.trimmingCharacters(in: .whitespacesAndNewlines)}
-                        .filter {!$0.isEmpty}
-                    
-                    recepts.append(Recept(
-                        namn: nyReceptNamn,
-                        bild: "frying.pan.fill",
-                        tillagningstid: nyReceptTillagningstid,
-                        svårighetsgrad: nyReceptSvårighetsgrad,
-                        ingredienser: ingrediensLista,
-                        instruktioner: nyReceptInstruktioner))
-                    
-                    nyReceptNamn = ""
-                    nyReceptSvårighetsgrad = ""
-                    nyReceptTillagningstid = ""
-                    nyReceptIngredienser = ""
-                    nyReceptInstruktioner = ""
-                    
-                    showForm.toggle()
-                    
-                } label: {
-                    HStack {
-                        Image(systemName: "plus.circle.fill")
-                        Text("Lägg till recept")
+                                    Text(recept.namn)
+                                        .font(.headline)
+                                    Text(recept.svårighetsgrad)
+                                        .font(.subheadline)
+                                        .italic(true)
+                                    Text(recept.tillagningstid)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+
+                        .onDelete(perform: deleteItems)
                     }
-                    .foregroundStyle(Color(.white))
-                    .frame(maxWidth: .infinity)
-                    .padding(20)
-                    .background(Color(.orange))
-                    .cornerRadius(20)
+                    .navigationTitle("Receptboken")
+                    .searchable(
+                        text: $search,
+                        placement: .navigationBarDrawer(displayMode: .always),
+                        prompt: "Hitta recept"
+                    )
                 }
-                .padding(.horizontal)
             }
-        
+            Tab("", systemImage: "plus.circle.fill") {
+
+                VStack {
+                    Text("Lägg till egna Recept")
+                        .font(Font.largeTitle)
+                        .bold()
+                        .padding(10)
+
+                    TextField("Namn", text: $nyReceptNamn)
+                        .padding(10)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .border(Color.yellow, width: 2)
+                        .padding(7)
+
+                    TextField("Svårighetsgrad", text: $nyReceptSvårighetsgrad)
+                        .padding(10)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .border(Color.yellow, width: 2)
+                        .padding(7)
+
+                    TextField("Tillagningstid", text: $nyReceptTillagningstid)
+                        .padding(10)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .border(Color.yellow, width: 2)
+                        .padding(7)
+
+                    TextField(
+                        "Ingredienser. separera med kommatecken",
+                        text: $nyReceptIngredienser
+                    )
+                    .padding(10)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .border(Color.yellow, width: 2)
+                    .padding(7)
+
+                    TextField("Instruktioner", text: $nyReceptInstruktioner)
+                        .padding(10)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .border(Color.yellow, width: 2)
+                        .padding(7)
+
+                    Button {
+                        let ingrediensLista =
+                            nyReceptIngredienser
+                            .split(separator: ",")
+                            .map {
+                                $0.trimmingCharacters(
+                                    in: .whitespacesAndNewlines
+                                )
+                            }
+                            .filter { !$0.isEmpty }
+
+                        recepts.append(
+                            Recept(
+                                namn: nyReceptNamn,
+                                bild: "frying.pan.fill",
+                                tillagningstid: nyReceptTillagningstid,
+                                svårighetsgrad: nyReceptSvårighetsgrad,
+                                ingredienser: ingrediensLista,
+                                instruktioner: nyReceptInstruktioner
+                            )
+                        )
+
+                        nyReceptNamn = ""
+                        nyReceptSvårighetsgrad = ""
+                        nyReceptTillagningstid = ""
+                        nyReceptIngredienser = ""
+                        nyReceptInstruktioner = ""
+
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                            Text("Lägg till recept")
+                        }
+                        .foregroundStyle(Color(.white))
+                        .frame(maxWidth: .infinity)
+                        .padding(20)
+                        .background(Color(.orange))
+                        .cornerRadius(20)
+                    }
+                    .padding(.horizontal)
+                }
+
+            }
+
         }
+        .tint(Color(.orange))
+
     }
 
     var filtreradeRecept: [Recept] {
         if search.isEmpty {
             return recepts
         } else {
-            return recepts.filter {recept in
+            return recepts.filter { recept in
                 recept.namn.localizedCaseInsensitiveContains(search)
             }
         }
     }
-    
+
     func deleteItems(indexSet: IndexSet) {
         recepts.remove(atOffsets: indexSet)
     }
