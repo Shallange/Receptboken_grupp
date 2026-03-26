@@ -178,8 +178,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            List { ForEach(recepts) { recept in
-                
+            List { ForEach(filtreradeRecept) { recept in
                 NavigationLink {
                     DetailedReceptView(recept: recept)
                 } label: {
@@ -211,7 +210,7 @@ struct ContentView: View {
             .navigationBarTitle("Receptboken")
         }
         .searchable(text: $search, prompt: "Hitta recept")
-
+        
         Button {
             showForm.toggle()
         } label: {
@@ -301,15 +300,15 @@ struct ContentView: View {
         
         }
     }
-    var filtreradeRecept: [String] {
+
+    var filtreradeRecept: [Recept] {
         if search.isEmpty {
-            return recepts.map { $0.namn }
+            return recepts
         } else {
-            return recepts.filter { $0
-                .localizedCaseInsensitiveContains(search)}
+            return recepts.filter {recept in
+                recept.namn.localizedCaseInsensitiveContains(search)
+            }
         }
-        
-        
     }
     
     func deleteItems(indexSet: IndexSet) {
